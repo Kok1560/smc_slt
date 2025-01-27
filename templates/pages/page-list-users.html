@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% if user.is_authenticated %}
+    {% if user.username == 'admin' %}
+     <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="d-flex flex-wrap align-items-center justify-content-between mb-4">
+                    <div>
+                        <h4 class="mb-3">User List</h4>
+                        <p class="mb-0">A dashboard provides you an overview of user list with access to the most important data,<br>
+                         functions and controls. </p>
+                    </div>
+                    <a href="{% url 'register_user' %}" class="btn btn-primary add-list"><i class="las la-plus mr-3"></i>Add User</a>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="table-responsive rounded mb-3">
+                <table class="data-tables table mb-0 tbl-server-info">
+                    <thead class="bg-white text-uppercase">
+                        <tr class="ligth ligth-data">
+                            <th>
+                                <div class="checkbox d-inline-block">
+                                    <input type="checkbox" class="checkbox-input" id="checkbox1">
+                                    <label for="checkbox1" class="mb-0"></label>
+                                </div>
+                            </th>
+                            <th>UserName</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody class="ligth-body">
+                        {% for user in form %}
+                        <tr>
+                            <td>
+                                <div class="checkbox d-inline-block">
+                                    <input type="checkbox" class="checkbox-input" id="checkbox2">
+                                    <label for="checkbox2" class="mb-0"></label>
+                                </div>
+                            </td>
+                            <td>{{user.username}}</td>
+                            <td>{{user.email}}</td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+        <!-- Page end  -->
+    </div>
+
+    {% else %}
+    <h2>Acces Denied</h2>
+    <p>Only The Admin Person Can Open This Page...</p>
+    {% endif %}
+
+{% else %}
+
+<h1>Sorry! You Must Be Logged In To View This Page...</h1>
+<div style="display: flex; justify-content: center; align-items: center;">
+    <a href="{% url 'login' %}" class="btn border">LOG IN</a>
+  </div>
+{% endif %}
+
+{% endblock content %}
