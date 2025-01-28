@@ -3,7 +3,7 @@
     <!-- Content -->
 {% block content %}
 {% if user.is_authenticated %}
-
+{% if user.username == 'admin' %}
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
@@ -63,9 +63,18 @@
 </div>
 
 {% else %}
+    <h2>Acces Denied</h2>
+    <p>Only The Admin Person Can Open This Page...</p>
+    {% endif %}
+
+{% else %}
 
 <h1>Sorry! You Must Be Logged In To View This Page...</h1>
-<a href="{% url 'login' %}" class="btn border">LOG IN</a>
-{% endif %}
+<div style="display: flex; justify-content: center; align-items: center;">
+    <a href="{% url 'login' %}" class="btn border">LOG IN</a>
+  </div>
+  {% endif %}
+
+
 {% endblock content %}
     <!-- End Content -->

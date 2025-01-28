@@ -239,6 +239,8 @@ def page_add_order(request, party_code):
                             state.append(True)
                             if party != filtered_result.party_code:
                                 messages.warning(request, f"{filtered_result.product_id} In Another Party")
+                            else:
+                                state.append(False)
 
                             
                         else:
