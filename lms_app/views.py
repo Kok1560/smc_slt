@@ -215,7 +215,6 @@ def page_add_order(request, party_code):
 
                         if str(product) in maint_devices:
                             messages.warning(request, f"{product} In Maintenace")
-                            state.append(False) 
 
                         elif filtered_result is None:
                             Order.objects.create(
@@ -227,7 +226,6 @@ def page_add_order(request, party_code):
                             inventory = Inventory.objects.get(product_name=parent)
                             inventory.real_quantity -= 1
                             inventory.save()
-                            state.append(False)
 
                         elif filtered_result.state == 'add':
                             if party == filtered_result.party_code:
@@ -245,11 +243,11 @@ def page_add_order(request, party_code):
                             inventory = Inventory.objects.get(product_name=parent)
                             inventory.real_quantity -= 1
                             inventory.save()
-                            state.append(False)
-                    if all(state):
-                        messages.warning(request, "This Package Was Exist")
-                    elif all(not item for item in state):
-                        messages.warning(request, "This Package In Another Party")
+                    if len(state) == len(products_in_package):
+                        if all(state):
+                            messages.warning(request, "This Package Was Exist")
+                        elif all(not item for item in state):
+                            messages.warning(request, "This Package In Another Party")
                 else:
                     messages.warning(request, "No package found with this name")
 
