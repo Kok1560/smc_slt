@@ -210,20 +210,14 @@ def page_add_order(request, party_code):
                 if package:
                     state = []
                     products_in_package = Product.objects.filter(pack_name=package)
-                    # for product in products_in_package:
-                    #     filtered_result = Order.objects.filter(product_id=product).last()
-                    #     if filtered_result is None:
-                            
-                    #     elif filtered_result.state == 'add':
-                            
-                    #     else:
-
                     for product in products_in_package:
                         filtered_result = Order.objects.filter(product_id=product).last()
-                        # if any(state):
-                        #     messages.warning(request, "There's Device In Another Party")
-                        #     break
-                        if filtered_result is None:
+
+                        if str(product) in maint_devices:
+                            messages.warning(request, f"{product} In Maintenace")
+                            state.append(False) 
+
+                        elif filtered_result is None:
                             Order.objects.create(
                                 product_id=product.product_id,
                                 party_code=party,
@@ -236,13 +230,11 @@ def page_add_order(request, party_code):
                             state.append(False)
 
                         elif filtered_result.state == 'add':
-                            state.append(True)
-                            if party != filtered_result.party_code:
-                                messages.warning(request, f"{filtered_result.product_id} In Another Party")
+                            if party == filtered_result.party_code:
+                                state.append(True)
                             else:
-                                state.append(False)
-
-                            
+                                messages.warning(request, f"{filtered_result.product_id} In Another Party")
+                                state.append(False)   
                         else:
                             Order.objects.create(
                                 product_id=product.product_id,
@@ -256,8 +248,8 @@ def page_add_order(request, party_code):
                             state.append(False)
                     if all(state):
                         messages.warning(request, "This Package Was Exist")
-
-                    
+                    elif all(not item for item in state):
+                        messages.warning(request, "This Package In Another Party")
                 else:
                     messages.warning(request, "No package found with this name")
 
